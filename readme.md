@@ -1,451 +1,328 @@
-# abu股票量化系统
+![](./img/head.png)
 
-#  印钞机系统（摇滚战国）
+![](./img/d2.png)
 
-1. 数据获取-ABU量化系统
-2. 相关指标-ABU量化系统
-3. 基础交易-ABU量化系统
-4. 度量工具-ABU量化系统
-5. 理论基础-ABU量化系统.
-6. 机器学习-ABU量化系统
-7. 解决方案A-ABU量化系统
-8. 解决方案B-ABU量化系统
-9. 解决方案C-ABU量化系统
-10. 解决方案D-ABU量化系统
+### 索引
 
-* 打开股票量化的黑箱-自己动手实现一个印钞机1
-* 打开股票量化的黑箱-自己动手实现一个印钞机2
-* 打开股票量化的黑箱-自己动手实现一个印钞机3
-* 打开股票量化的黑箱-自己动手实现一个印钞机4
-* 打开股票量化的黑箱-自己动手实现一个印钞机5
-* 打开股票量化的黑箱-自己动手实现一个印钞机6
-* 打开股票量化的黑箱-自己动手实现一个印钞机7
-* 打开股票量化的黑箱-自己动手实现一个印钞机8
+| 内容 | 位置 | 
+| ------| ------ | 
+| 阿布量化系统源代码 | abupy目录 |
+| 阿布量化使用教程 | abupy_lecture目录 |
+| 阿布量化非编程界面操作 | abupy_ui目录 |
+| 《量化交易之路》示例代码 | ipython／python目录| 
+| 《机器学习之路》示例代码 | https://github.com/maxmon/abu_ml | 
 
+### 特点
 
-## 非均衡胜负收益带来的必然非均衡胜负比例，目标由因子的能力解决一部分，模式识别提升关键的一部分
+* 使用多种机器学习技术智能优化策略
+* 在实盘中指导策略进行交易，提高策略的实盘效果，战胜市场
 
+### 支持的投资市场:
 
-# readme使用我认为最重要的一章吧
+* 美股，A股，港股
+* 期货，期权
+* 比特币，莱特币
 
+### 工程设计目标：
 
+* 分离基础策略和策略优化监督模块
+* 提高灵活度和适配性
 
-# 打开股票量化的黑箱(自己动手写一个印钞机) 第五章
+### APP下载 & 网址
 
-### 作者：阿布🐶
+谢谢您来使用我们的应用!
 
-### 未经本人允许禁止转载
+* [电脑浏览器访问网址: https://www.abuquant.com](https://www.abuquant.com)
+* [iOS苹果手机AppStore下载链接](https://itunes.apple.com/cn/app/id1447039705?mt=8)
+* [android手机下载链接页面](https://www.abuquant.com/download)
+* [量化技术博客地址](https://blog.abuquant.com/)
+* [K线课堂地址](https://blog.abuquant.com/category/kl_classical)
+* [量化课堂地址](https://blog.abuquant.com/category/lecture/)
 
-____
+### APP简介
 
+* 量化系统
 
-##  非均衡胜负收益带来的必然非均衡胜负比例，目标由因子的能力解决一部分，模式识别提升关键的一部分
+阿布量化综合AI大数据系统, K线形态系统, 经典指标系统, 走势趋势分析系统, 时间序列维度系统, 统计概率系统, 传统均线系统对投资品种进行深度量化分析, 彻底跨越用户复杂的代码量化阶段, 更适合普通人群使用, 迈向量化2.0时代.
 
-上一章使用 深度学习卷积神经网络对印钞机之路进行了可行性分析，主要是基于tensorflow的alex_net模型和基于caffe使用google_lenet进行训练学习, 这一章我们将从另一个方向发展印钞机之路，这条路是我最推荐的做法，因为使用深度学习特别是卷积神经网络，**它最后学习到的特征权重等等对我们都是一个黑盒，我们并不知道它到底学习到了什么特征，这些特征有什么特点，为什么它能指导我们的交易**，而且训练时间与判定效率都不高，对密集型交易系不适用, 下面我们开始！
+* 量化模型
 
-这章开始的主角就是gmm-hmm了，它的最普遍的用途是在语音识别上，我们这章使用它做股票模式识别
+上述系统中结合上百种子量化模型, 如: 金融时间序列损耗模型, 深度形态质量评估模型, 多空形态组合评定模型, 多头形态止损策略模型, 空头形态回补策略模型, 大数据K线形态历史组合拟合模型, 交易持仓心态模型, 多巴胺量化模型, 惯性残存阻力支撑模型, 多空互换报复概率模型, 强弱对抗模型, 趋势角度变化率模型, 联动分析模型, 时间序列的过激反应模型, 迟钝报复反应模型, 趋势启动速度模型, 配对对冲模型等.
 
-	# 首先加载之前因子运行好的训练集与测试集数据
-	fn = ZEnv.g_project_root + '/data/cache/golden_n6_train_abu'
-	key = 'golden_n6_train_abu'
-	orders_pd_train = ZCommonUtil.load_hdf5(fn, key)
-	print orders_pd_train.shape
+![](./img/d3.png)
 
-	fn = ZEnv.g_project_root +  '/data/cache/golden_n6_test_abu'
-	key = 'golden_n6_test_abu'
-	orders_pd_test = ZCommonUtil.load_hdf5(fn, key)
-	print orders_pd_test.shape
-		# out
-		(42538, 31)
-		(4837, 31)
+* AI量化
 
-_____
+阿布量化针对AI人工智能从底层开发算法, 构建适合量化体系的人工智能AI系统, 训练了数个从不同角度识别量化特征的评分模型，整体上分为三个系别：物理模型组、多巴胺生物模型组、量化形态模型组。不同系别模型群从不同角度(主要物理交易实体分析、人群心理、图表等三个方向)评估走势，系别的模型群是由若干个独有的识别算法和参数遗传淘汰，组成族群，加权投票评分. 
 
-    # 对训练集的度量
-    train_ump = UmpMainClass(orders_pd_train, MlFiterGoldenPdClass)
-    train_ump.show_general()
-		# out
-		all fit order = (40351, 31)
-		win rate = 0.500681519665
-		profit_cg.sum() = 249.617989344
-		win mean = 0.0745965275755 loss_mean = -0.0625759181825 
+* 量化策略
 
+阿布量化结合了传统基于代码策的量化系统, 对未来择时信号发出时机的预判, 系统基于数百种简单种子交易策略，衍生出更多的量化交易策略新策略在这些种子基础上不断自我学习、自我成长，不断分裂，适者生存，淘汰选择机制下繁衍，目前应用的量化买入卖出信号策略共计18496种。
 
-![output_7_1.png](http://upload-images.jianshu.io/upload_images/3136804-aceb4e1b9c46b78c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+* 量化应用
 
-    
-* 使用gmm从一定范围分类默认40-85需要根据样本数量进行调整，寻找compoent中大于loss阀值的分类分类记做ind
-* 返回df index＝compoent_ind 一个compoent中可能有多个ind
+阿布量化结合多种量化分析数据构建了数百种量化应用, 如: AI高能预警, AI高光时刻, 智能预测涨跌幅, 下跌五浪量化, 上涨五浪量化, 阻力支撑强度分析, 上升三角形突破, 下降三角形, 三重底 (头肩底), 三重顶 (头肩顶), 圆弧顶, 圆弧底, 乌云盖顶形态, 上升三部曲形态, 好友反攻形态, 单针探底形态, 射击之星形态, 多方炮形态, 上涨镊子线, 向上突破箱体, 跳空突破缺口, 黄金分割线量化, 趋势跟踪信号, 均值回复信号, 止损风险控制量化, 止盈利润保护量化, 综合指标分析等.
 
-### 说的简单点就是使用gmm对数据聚类，比如你对所有数据聚类聚了20个分类，然后发现第19个分类里面70％以上都是赔钱的交易，那我就提取这个分类的的这个类别，作为之后的判定器的组成部份，如果新的交易被判定为这类那我们就对这个交易进行拦截，
 
+## 安装
 
-实际运用会稍微复杂一下，下面会一一说明对马尔科夫链及隐形马尔科夫链的理解推荐阅读‘数学之美’这书写的真不错，很多知识点比如熵的概念等我从这本书上看到的解释最令我信服而且通俗
+### 部署
 
-如下所示，默认分类从40-85，选择阀值大与65%的失败类别，
-各个轴像代表
-* lcs: compoent_ind 中样本总数
-* lrs: compoent_ind 中样本loss比例
-* lps: compoent_ind 中样本profit sum
-* lms: compoent_ind 中样本profit mean
+推荐使用Anaconda部署Python环境，详见 [量化环境部署](http://www.abuquant.com/lecture/lecture_0.html)
 
+### 测试
 
-    train_ump.gmm_component_filter()
-      
+```python
+import abupy
+```
+## 界面操作（非编程）
 
-![output_10_0.png](http://upload-images.jianshu.io/upload_images/3136804-0a19827e0f28fa56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](./abupy_ui/gif/loop_back.gif)
 
+[更多界面操作示例](./abupy_ui/readme.md)
 
-![output_10_1.png](http://upload-images.jianshu.io/upload_images/3136804-2499b482a222ddbd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+## 使用文档
 
-___
-
-**由于简书不支持html表格，所以完整表格请查询git上ipython notebook完整版本**
-___
-![Snip20161020_28.png](http://upload-images.jianshu.io/upload_images/3136804-61971f45c27fee2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
-    train_ump.cprs.loc[train_ump.cprs.lrs.argmax()]
-		# out
-		lcs    49.000000
-		lrs     0.755102
-		lps    -4.565771
-		lms    -0.093179
-		Name: 70_66, dtype: float64
-
-上面找出失败率最高的分类70_66，75％以上的交易都是失败的交易
-
-下面随便找个分类可视化一下，你最终找出来的分类就是类似这个的第8分类还有第29分类
-
-
-![output_14_0.png](http://upload-images.jianshu.io/upload_images/3136804-ef2e636d9c325f3b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-**寻找全局最优**
-
-	# 摘录部份代码，具体请查阅UmpBase.py
-
-	def brust_min(self):
-	    """
-	    全局最优
-	    :return:
-	    """
-	    cprs = self.cprs
-	    optv = sco.brute(self.min_func_improved, ((round(cprs['lps'].min(), 2), 0, 0.5), (round(cprs['lms'].min(), 2),
-	                                                                                      round(cprs['lms'].max(), 3),
-	                                                                                      0.01),
-	                                              (round(cprs['lrs'].min(), 2), round(cprs['lrs'].max(), 2), 0.1)),
-	                     finish=None)
-	    return optv
-
-	def sco_min(self, guess):
-	    """
-	    局部最优借
-	    :param guess:
-	    :return:
-	    """
-	    cprs = self.cprs
-	    bnds = ((round(cprs['lps'].min(), 3), round(cprs['lps'].max(), 3)),
-	            (round(cprs['lms'].min(), 3), round(cprs['lms'].max(), 3)),
-	            (round(cprs['lrs'].min(), 3), round(cprs['lrs'].max(), 3)))
-
-	    optv = sco.minimize(self.min_func_improved, guess, method='BFGS',
-	                        bounds=bnds)
-	    return optv
-
-	def min_func(self, lpmr):
-	    cprs = self.cprs
-	    nts = self.nts
-
-	    llps = cprs[(cprs['lps'] <= lpmr[0]) & (cprs['lms'] <= lpmr[1]) & (cprs['lrs'] >= lpmr[2])]
-
-	    nts_pd = pd.DataFrame()
-	    for nk in llps.index:
-	        nts_pd = nts_pd.append(nts[nk])
-	    if nts_pd.empty:
-	        return np.array([0.0001, 0])
-	    nts_pd = nts_pd.drop_duplicates(subset='ind', keep='last')
-
-	    num = nts_pd.shape[0]
-	    loss_rate = nts_pd.result.value_counts()[0] / nts_pd.result.value_counts().sum()
-	    win_rate = nts_pd.result.value_counts()[1] / nts_pd.result.value_counts().sum()
-	    improved = (nts_pd.shape[0] / self.fiter.order_has_ret.shape[0]) * (loss_rate - win_rate)
-	    # print improved
-	    return np.array([improved, num])
+### 1：择时策略的开发
 
-	def min_func_improved(self, lpmr):
-	    """
-	        求最大提高，min负数
-	    """
-	    return -self.min_func(lpmr)[0]
+[第一节界面操作教程视频播放地址](https://v.qq.com/x/page/g0555b9k6ge.html)
 
-_____
+择时策略决定什么时候买入投资品，回测告诉我们这种策略在历史数据中的模拟收益如何。
 
-    train_ump.brust_min()
-        # out
-        array([-0.48,  0.  ,  0.65])
+1. 买入择时因子的编写
+2. 分解模式一步一步对策略进行回测
+3. 卖出择时因子的实现
 
-将全局结果-0.48,  0. 0.65带入sco_min求局部优化
+>在对的时间，遇见对的人(股票)，是一种幸福 
+>
+>在对的时间，遇见错的人(股票)，是一种悲伤 
+>
+>在错的时间，遇见对的人(股票)，是一声叹息 
+>
+>在错的时间，遇见错的人(股票)，是一种无奈 
 
-    guess = [-0.63,  0.  ,  0.65]
-    train_ump.sco_min(guess)
-        # out
-		      fun: -0.012936482367227579
-		 hess_inv: array([[1, 0, 0],
-		       [0, 1, 0],
-		       [0, 0, 1]])
-		      jac: array([ 0.,  0.,  0.])
-		  message: 'Optimization terminated successfully.'
-		     nfev: 5
-		      nit: 0
-		     njev: 1
-		   status: 0
-		  success: True
-		        x: array([-0.63,  0.  ,  0.65])
+[详细阅读](http://www.abuquant.com/lecture/lecture_1.html)
 
+### 2: 择时策略的优化
 
-### 上面所有选择最优的目的就是筛选能达到最优化的类别子集，为什么呢？因为比如某个分类虽然65%以上的单子都是失败的，但是那35%盈利的单子收益巨大，很可能出现这种情况在你使用高风险因子的时候，所以解最优方程组使用凸优化技术选取最优子集
-____
+通过止盈止损保护策略产生的利润，控制风险。
 
-### 筛选出符合最优的llps
+1. 基本止盈止损策略
+2. 风险控制止损策略
+3. 利润保护止盈策略
 
-    llps = train_ump.cprs[(train_ump.cprs['lps'] <= -0.63) & (train_ump.cprs['lms'] <= -0.00 )& (train_ump.cprs['lrs'] >=0.65)]
-    llps
-        
-**由于简书不支持html表格，所以完整表格请查询git上ipython notebook完整版本**
-___
+![](./img/img1.png)
 
-![Snip20161021_29.png](http://upload-images.jianshu.io/upload_images/3136804-832c05307938ece0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+[详细阅读](http://www.abuquant.com/lecture/lecture_2.html)
 
+### 3: 滑点策略与交易手续费
 
+考虑应用交易策略时产生的成交价格偏差及手续费。
 
-	# 针对子集llps的对之前交易的负作用力的统计
-	def choose_cprs_component(self, llps):
-	    """
-	    :param llps: cprs[(so.cprs['lps'] < 0) & (so.cprs['lms'] < -0.0)]
-	    你所需要的符合筛选条件的cprs
-	    :return:
-	    """
-	    if not hasattr(self, 'cprs'):
-	        raise ValueError('gmm_component_filter not exe!!!! ')
+1. 滑点买入卖出价格确定及策略实现
+2. 交易手续费的计算以及自定义手续费
 
-	    nts_pd = pd.DataFrame()
-	    for nk in llps.index:
-	        nts_pd = nts_pd.append(self.nts[nk])
-	    nts_pd = nts_pd.drop_duplicates(subset='ind', keep='last')
-	    ZLog.info('nts_pd.shape = {0}'.format(nts_pd.shape))
-	    loss_rate = nts_pd.result.value_counts()[0] / nts_pd.result.value_counts().sum()
-	    win_rate = nts_pd.result.value_counts()[1] / nts_pd.result.value_counts().sum()
-	    ZLog.info('nts_pd loss rate = {0}'.format(loss_rate))
+| type | date | symbol | commission |
+| ------| ------ | ------ | ------ |
+| buy | 20150423 | usTSLA | 8.22 |
+| buy | 20150428 | usTSLA | 7.53 |
+| sell | 20150622 | usTSLA | 8.22 |
+| buy | 20150624 | usTSLA | 7.53 |
+| sell | 20150706 | usTSLA | 7.53 |
+| sell | 20150708 | usTSLA | 7.53 |
+| buy | 20151230 | usTSLA | 7.22 |
+| sell | 20160105 | usTSLA | 7.22 |
+| buy | 20160315 | usTSLA | 5.57 |
+| sell | 20160429 | usTSLA | 5.57 |
 
-	    improved = (nts_pd.shape[0] / self.fiter.order_has_ret.shape[0]) * (loss_rate - win_rate)
-	    ZLog.info('improved rate = {0}'.format(improved))
+[详细阅读](http://www.abuquant.com/lecture/lecture_3.html)
 
-	    xt = self.fiter.order_has_ret.result.value_counts()
-	    ZLog.info('predict win rate = ' + str(xt[1] / xt.sum() + improved))
+### 4: 多支股票择时回测与仓位管理
 
-	    nts_pd.sort_index()['profit'].cumsum().plot()
-	    plt.show()
+针对多支股票实现择时策略，通过仓位管理策略控制风险。
 
-如下显现这些选取的子集llps的对之前交易的负作用力
+1. 多支股票使用相同的因子进行择时
+2. 自定义仓位管理策略的实现
+3. 多支股票使用不同的因子进行择时 
+4. 使用并行来提升择时运行效率
 
-1. loss_rate稍小相对阀值0.65。
-2. 预期胜率提升0.0129
+![](./img/img3.png)
 
-    train_ump.choose_cprs_component(llps)
-		＃ out
-		nts_pd.shape = (1920, 9)
-		nts_pd loss rate = 0.6359375
-		improved rate = 0.0129364823672
-		predict win rate = 0.513618002032
+[详细阅读](http://www.abuquant.com/lecture/lecture_4.html)
 
+### 5: 选股策略的开发
 
-![output_24_1.png](http://upload-images.jianshu.io/upload_images/3136804-9c1b78b5593207bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+一个好的策略需要一个好的标的。
 
+1. 选股因子的编写
+2. 多个选股因子并行执行
+3. 使用并行来提升选股运行效率
 
-如下表格所示看看这个61_50有72%失败的分类列，**发现内在的隐含意义**
+[详细阅读](http://www.abuquant.com/lecture/lecture_5.html)
 
+### 6: 回测结果的度量
 
-deg_windowPd， deg_60WindowPd都是在－5－－11的负数，wave_score1会在1.5-2， deg_hisWindowPd没有明显规律，看到了吗，我们能从gmm－hmm的分类中发现我们能理解的规律，这就保证了我们的交易信心，对比黑盒的深度学习方式，优点一目了然
+正确的度量引领着正确的前进方向。
 
-![Snip20161021_30.png](http://upload-images.jianshu.io/upload_images/3136804-59c1942dd4f911fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+1. 度量的基本使用方法
+2. 度量的可视化
+3. 扩展自定义度量类
 
-___
+[详细阅读](http://www.abuquant.com/lecture/lecture_6.html)
 
-**如下所示测试集没有开启因子优化的结果0.497，模型预测能提高0.0129 根据数据显示可以优化到0.509吗？**
+### 7: 寻找策略最优参数和评分
 
-    test_ump = UmpMainClass(orders_pd_test, MlFiterGoldenPdClass)
-    test_ump.show_general()
-		＃ out
-		all fit order = (4588, 31)
-		win rate = 0.497820401046
-		profit_cg.sum() = 23.8727798282
-		win mean = 0.0724627453005 loss_mean = -0.0615429338615 
+通过定制的评分机制，寻找一个策略最合理的参数，比如：应该考虑多少天的均线？
 
+1. 参数取值范围
+2. Grid Search寻找最优参数
+3. 度量结果的评分
+4. 不同权重的评分
+5. 自定义评分类的实现
 
-![output_28_1.png](http://upload-images.jianshu.io/upload_images/3136804-1c648f551ddb7685.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+[详细阅读](http://www.abuquant.com/lecture/lecture_7.html)
 
-**将整个优化好的模型序列话到本地**
+### 8: A股市场的回测
 
-    train_ump.dump_clf(llps)
+1. A股市场的回测示例
+2. 涨跌停的特殊处理
+3. 对多组交易结果进行分析
 
-使用切割测试集开启因子优化回测优化：
+[详细阅读](http://www.abuquant.com/lecture/lecture_8.html)
 
-* use_last_test=True
-* BuyGoldenFactor.g_enable_fiter = True    
+### 9: 港股市场的回测
 
+1. 港股市场的回测示例
+2. 优化策略，提高系统的稳定性
+3. 将优化策略的'策略'做为类装饰器进行封装
 
-	# BuyGoldenFactor.g_enable_fiter 指明使用优化分类器，对判断失败概率大的交易进行拦截
-	import BuyGoldenFactor
-	from BuyGoldenFactor import BuyGoldenFactorClass
-	import MetricsManger
-	from MetricsManger import metrics_rsc
-	from FactorMetrics import METRICSTYPE
+[详细阅读](http://www.abuquant.com/lecture/lecture_9.html)
 
-	BuyGoldenFactor.g_enable_fiter = True
-	buy_factors = [{'XD': 42, 'class': BuyGoldenFactorClass, 'draw': True}]
-	out, orders_pd_test_enable_fiter = MetricsManger.make_metrics_rsc_mul_symbol_grid(buy_factors, n_folds=6, 
-	    score_type=METRICSTYPE.SYSMBOL_R_SCORES_GOLDEN.value, ret_cnt_need=0, train_test_split=False, 
-	    use_last_test=True, force_one_process=False)
+### 10: 比特币, 莱特币的回测
 
-____
+1. 比特币, 莱特币的走势数据分析
+2. 比特币, 莱特币的走势可视化分析
+3. 比特币，莱特币市场的回测
 
-	test_filter_ump = UmpMainClass(orders_pd_test_enable_fiter, MlFiterGoldenPdClass)
-	test_filter_ump.show_general()
-		# out
-		all fit order = (4335, 31)
-		win rate = 0.504498269896
-		profit_cg.sum() = 26.3090428828
-		win mean = 0.0691880572237 loss_mean = -0.0582673178493 
+[详细阅读](http://www.abuquant.com/lecture/lecture_10.html)
 
+### 11: 期货市场的回测
 
+1. 期货市场的特点
+2. 看涨合约的回测
+3. 看跌合约的回测
+4. 位移路程比优化策略
 
-![output_34_1.png](http://upload-images.jianshu.io/upload_images/3136804-f09c13c8fe452599.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+[详细阅读](http://www.abuquant.com/lecture/lecture_11.html)
 
-### 如上所示：4588 － 4335大概250个交易被组织拦截(实际会更多，all fit order只显示在截止时间已经成交的股票)
+### 12: 机器学习与比特币示例
 
-### 胜率优化：0.5044 － 0.4978 不到1个点，比预期要低
+如何在投资品的量化交易中正确使用机器学习技术？
 
-### 收益比值提升挺多：26.3 - 23.8
+1. 比特币特征的提取
+2. abu中内置机器学习模块的使用
+3. 测试集的验证与非均衡技术
+4. 继承AbuMLPd对数据处理进行封装
 
-___
-我们直观的看看都有哪些交易被阻拦了
+[详细阅读](http://www.abuquant.com/lecture/lecture_12.html)
 
-	import TradeProxy
-	unsame_order = TradeProxy.find_unsame_in_2orders(orders_pd_test, orders_pd_test_enable_fiter)
-	unsame_order = unsame_order[unsame_order.result <> 0]
-	unsame_order.shape
-		# out
-		(253, 32)
+### 13: 量化技术分析应用
 
-如下所示之前预测失败率0.635，实际筛出来的失败率是0.616 还不错
+技术分析三大假设：市场行为涵盖一切；价格沿趋势移动；历史会重演。
 
-	pd.options.display.max_columns = 100
-	unsame_order.sort_values('buy Date').profit_cg.cumsum().plot()
+1. 阻力线，支撑线自动绘制
+2. 跳空技术分析
+3. 传统技术指标技术分析
 
-	xt = unsame_order.result.value_counts()
-	ZLog.info('unsame_order loss rate = ' + str(float(xt[-1]) / xt.sum()))
-		＃ out
-		unsame_order loss rate = 0.616600790514
+[详细阅读](http://www.abuquant.com/lecture/lecture_13.html)
 
+### 14: 量化相关性分析应用
 
-![output_41_1.png](http://upload-images.jianshu.io/upload_images/3136804-bfc951e8bd82317f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+相似的投资品数据的背后，往往是相似行为模式的投资人群。
 
-**如下图所示看下有很多收益超过20%的单子被block掉了，虽然也有很多损失超过20%的单子**
-解决方案：gmm分类中找损失超过多少阀值的类似优先筛选或者组合权重筛选 之后章节会引入边裁机制解决这个问题
+1. 相关相似度的度量
+2. 距离的度量与相似度
+3. 相似相关接口的应用
+4. 自然相关性
 
-	import MarketDrawer
-	# 显示三个被拦截了的收益大于20%的单子
-	MarketDrawer.plot_candle_from_order(unsame_order[unsame_order.profit_cg > 0.20][:3])
+[详细阅读](http://www.abuquant.com/lecture/lecture_14.html)
 
+### 15: 量化交易和搜索引擎
 
+搜索策略生成的失败交易，由裁判拦截住冲动的交易者。
 
-![output_44_0.png](http://upload-images.jianshu.io/upload_images/3136804-d86fdcb8d4ce2339.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+1. 切分训练集交易的回测
+2. 对交易进行人工分析
+3. 主裁系统原理
+4. 角度主裁
+5. 赋予宏观上合理的解释
+6. 最优分类簇筛选
 
+![](./img/img13.png)
 
+[详细阅读](http://www.abuquant.com/lecture/lecture_15.html)
 
-![output_44_1.png](http://upload-images.jianshu.io/upload_images/3136804-76c64c91f31b0ee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+### 16: UMP主裁交易决策
 
+1. 跳空主裁
+2. 价格主裁
+3. 波动主裁
+4. 验证主裁是否称职, 在abu系统中开启主裁拦截模式
+5. 组织裁判进行更复杂的综合裁决
+6. 让裁判自己学习怎么配合，自己做出最正确的判断
 
+[详细阅读](http://www.abuquant.com/lecture/lecture_16.html)
 
-![output_44_2.png](http://upload-images.jianshu.io/upload_images/3136804-3f35844e17645228.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+### 17: UMP边裁交易决策
 
-	# 显示2个被拦截了的损失大于20%的单子
-	MarketDrawer.plot_candle_from_order(unsame_order[unsame_order.profit_cg < -0.20][:2])
+1. 角度边裁
+2. 价格边裁
+3. 波动边裁
+4. 综合边裁
+5. 验证边裁是否称职
+6. 在abu系统中开启边裁拦截模式
 
+[详细阅读](http://www.abuquant.com/lecture/lecture_17.html)
 
-![output_45_0.png](http://upload-images.jianshu.io/upload_images/3136804-252836ea7df4f0e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+### 18: 自定义裁判决策交易
 
+1. 从不同视角训练新的主裁
+2. 从不同视角训练新的边裁
+3. 添加新的视角来录制比赛（记录回测特征）
+4. 主裁使用新的视角来决策交易
+5. 边裁使用新的视角来决策交易
 
+abupy中ump模块的设计目标是：
 
-![output_45_1.png](http://upload-images.jianshu.io/upload_images/3136804-a7c60896e95486b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+* 不需要在具体策略中硬编码
+* 不需要人工设定阀值，即且使得代码逻辑清晰
+* 分离基础策略和策略优化监督模块，提高灵活度和适配性
+* 发现策略中隐藏的交易策略问题
+* 可以通过不断的学习新的交易数据
 
+[详细阅读](http://www.abuquant.com/lecture/lecture_18.html)
 
-## 使用ipython notebook的交互式寻找是否提高原始rate就能得到更高的impove
+### 19: 数据源
 
-	lps_range = (round(train_ump.cprs['lps'].min(), 2), round(train_ump.cprs['lps'].max(), 2), 0.1)
-	lms_range = (round(train_ump.cprs['lms'].min(), 2), round(train_ump.cprs['lms'].max(), 2), 0.01)
-	lrs_range = (round(train_ump.cprs['lrs'].min(), 2), round(train_ump.cprs['lrs'].max(), 2), 0.01)
-	def interact_llps(lps, lms, lrs):
-	    it_llps = train_ump.cprs[(train_ump.cprs['lps'] <= lps) & (train_ump.cprs['lms'] <= lms)& (train_ump.cprs['lrs'] >=lrs)]
-	    if not it_llps.empty:
-	        train_ump.choose_cprs_component(it_llps)
-	from ipywidgets import interact
-	interact(interact_llps, lps=lps_range, lms=lms_range, lrs=lrs_range)
+abu支持股票、期货、数字货币等多种金融投资品的行情和交易，并具有高度可定制性。
 
+1. 数据模式的切换
+2. 数据存储的切换
+3. 数据源的切换
+4. 全市场数据的更新
+5. 接入外部数据源，股票数据源
+6. 接入外部数据源，期货数据源
+7. 接入外部数据源，比特币，莱特币数据源
 
-**完整可交互请参阅git上完整版本**
+[详细阅读](http://www.abuquant.com/lecture/lecture_19.html)
 
 
-![Snip20161021_33.png](http://upload-images.jianshu.io/upload_images/3136804-65b30f28f5abf74e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+[更多阿布量化量化技术文章](http://www.abuquant.com/article)
 
 
-**使用视觉上感觉更好的进行回测**
+关注阿布量化微信公众号: abu_quant
 
-	llps = train_ump.cprs[(train_ump.cprs['lps'] <= -0.63) & (train_ump.cprs['lms'] <= -0.00 )& (train_ump.cprs['lrs'] >=0.68)]
-	train_ump.dump_clf(llps)
-	BuyGoldenFactor.g_enable_fiter = True
-	buy_factors = [{'XD': 42, 'class': BuyGoldenFactorClass, 'draw': True}]
-	out, orders_pd_test_enable_fiter2 = MetricsManger.make_metrics_rsc_mul_symbol_grid(buy_factors, n_folds=6, 
-	    score_type=METRICSTYPE.SYSMBOL_R_SCORES_GOLDEN.value, ret_cnt_need=0, train_test_split=False, 
-	    use_last_test=True, force_one_process=False)
+![](./img/qrcode.jpg)
 
-**如下所示结果还没之前的好呀，看来可以比较相信凸优化选择的最优参数**
-
-	UmpMainClass(orders_pd_test_enable_fiter2, MlFiterGoldenPdClass).show_general()
-		＃ out
-		all fit order = (4477, 31)
-		win rate = 0.50033504579
-		profit_cg.sum() = 25.0138982168
-		win mean = 0.0712054456398 loss_mean = -0.0601899144826 
-
-
-![output_52_1.png](http://upload-images.jianshu.io/upload_images/3136804-03faee644965b705.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
-### 修改拦截规则试试，如下可视化找到0， 0， 0.65有2215个 修改需要命中分类列的数量， BuyGoldenFactor.g_fiter_ind_cnt = 3 看看效果，简单说就是找一个比较宽松的限制条件，但是类别以前命中一个就拦截了，现在要命中三次，你可以变化出无数个变种在具体应用上，这里只是提供基础思路
-
-	llps = train_ump.cprs[(train_ump.cprs['lps'] <= 0) & (train_ump.cprs['lms'] <= 0 )& (train_ump.cprs['lrs'] >=0.65)]
-	train_ump.dump_clf(llps)
-	BuyGoldenFactor.g_enable_fiter = True
-	BuyGoldenFactor.g_fiter_ind_cnt = 3
-	buy_factors = [{'XD': 42, 'class': BuyGoldenFactorClass, 'draw': True}]
-	out, orders_pd_test_enable_fiter_ = MetricsManger.make_metrics_rsc_mul_symbol_grid(buy_factors, n_folds=6, 
-	    score_type=METRICSTYPE.SYSMBOL_R_SCORES_GOLDEN.value, ret_cnt_need=0, train_test_split=False, 
-	    use_last_test=True, force_one_process=False)
-
-
-### 怎么样， 看懂了吗？我衷心的希望你能看懂本章的所有内容，这章是关于这种方式的一个开始，本章内容比较多，下一章继续深入使用这种方式，提升识别效率，提升胜率，这一章节很重要，整篇文章最重要的部分在我看来就是这一章！
-
-###  再次强调文章中心思想：‘非均衡胜负收益’带来的必然’非均衡胜负比例‘，目标由’因子‘的能力解决一部分，’模式识别‘提升关键的一部分
-
-____
-
-## 感谢🙏您能有耐心看到这里
-## 如果有什么问题可以加阿布的微信 
-## 微信号：aaaabbbuu
-
-
-![mmexport1475383814280.jpg](http://upload-images.jianshu.io/upload_images/3136804-260ad1a188d413a9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-
-
+### License
+[GPL](./LICENSE)
